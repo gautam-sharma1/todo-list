@@ -7,7 +7,6 @@ class Button{
 
     initialize(){
         const element = document.querySelector("#"+this.id);
-        console.log(email)
         this.btn = document.createElement("button");
         this.btn.innerHTML = this.innerHTML;
         element.appendChild(this.btn);
