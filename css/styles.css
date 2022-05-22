@@ -113,8 +113,7 @@ footer span {
 }
 
 #email{
-  inset-block: aut;
-  margin-right: auto;
-  margin-left: auto;
+text-align: center;
+margin-bottom: 10rem;
   
 }

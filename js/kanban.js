@@ -1,3 +1,7 @@
+import {Item} from './item.js'
+import {Button} from './button.js'
+import {Tags} from './tags.js'
+
 let order = 1;
 let adding = false;
 
@@ -8,55 +12,29 @@ const messageItemOnItem = 'Cannot drop one item onto another';
 const add_btn = document.querySelector('.add');
 add_btn.addEventListener('click', () => {
   const target = document.querySelector('#requested');
-  if (adding == false) {
-     adding = true;
+  //if (adding == false) {
+     //adding = true;
      target.appendChild(create_item());
   
-}
+//}
 });
 
-const email = document.querySelector("#email");
-email_btn = document.createElement("button");
-email_btn.innerHTML = "Send Email!";
-email.appendChild(email_btn);
+const email_btn = new Button('email','Send Email!');
 
 const create_item = () => {
+  
   const item =  document.createElement("div");
   item.classList.add("item");
-  item.id = "item-" + String(order);
+  item.id = "item-" + String(Item.order);
   item.draggable = "true";
+  const tag = new Tags('hello');
+  const itemObj = new Item(1,"hello","",tag, error,item);
+  itemObj.addDragStart();
+  itemObj.addDragEnd();
+
+  console.log(tag);
   
-item.addEventListener('dragstart', (event) => 
-{ 
-  console.log(event.target)
-  console.log(event.target.id);
-  event.dataTransfer.setData('text', event.target.id);
-});
-item.addEventListener('dragend', (event) => 
-{
-  event.dataTransfer.clearData();
-});
-
-const input = document.createElement("input");
-item.appendChild(input);
-const save_btn = document.createElement("button");
-save_btn.innerHTML = "Save";
-
-save_btn.addEventListener('click', () => {
-  error.innerHTML = "";
-  if(input.value != ""){
-      order += 1;
-      item.textContent = input.value;
-      adding = false;
-  }
-  else{
-    error.innerHTML = message;
-  }
-} );
-
-item.appendChild(save_btn);
-
-return item;
+  return item;
 };
 
 
