@@ -2,17 +2,18 @@ import {Item} from './item.js'
 import {Button} from './button.js'
 import {Tags} from './tags.js'
 
-let order = 1;
-let adding = false;
-
 const error = document.querySelector('.error');
 const message = 'Please add a description.';
+const availableColumns = ["requested", "in-progress", "done"];
 const messageItemOnItem = 'Cannot drop one item onto another';
+const allItems = [];
 
 const add_btn = document.querySelector('.add');
 add_btn.addEventListener('click', () => {
   const target = document.querySelector('#requested');
-     target.appendChild(create_item());
+     const item = create_item();
+     allItems.push(item);
+     target.appendChild(item);
 });
 
 const email_btn = new Button('email','Send Email!');
@@ -23,13 +24,16 @@ const create_item = () => {
   item.classList.add("item");
   item.id = "item-" + String(Item.order);
   item.draggable = "true";
-  const tag = new Tags('hello');
+  const tag = new Tags('Initialize');
   const itemObj = new Item(1,"hello","",tag, error,item);
+  Item.count['requested'] += 1;
   itemObj.addDragStart();
   itemObj.addDragEnd();
   
   return item;
 };
+
+
 
 
 // TODO add to a module
@@ -39,34 +43,45 @@ document.querySelectorAll('.drop').forEach(item => {
     const id  = event.dataTransfer.getData('text');
     const element = document.getElementById(id);
     error.innerHTML = "";
-    // clean this up -> make new function
-    // elemnt is an item
+
+    // TODO error handler
+    const srcID = event.dataTransfer.getData('parent');
+    const targetID = event.target.id;
+
+    if(availableColumns.includes(event.target.id)){
+      if(srcID !== event.target.id){
+        if(Item.count[srcID] != 0){
+          Item.count[srcID]--;
+        }        
+        Item.count[event.target.id]++;
+      }
+
+    }
+    else{
+      error.innerHTML = messageItemOnItem;
+      return;
+    }
+
+
+
     if(item.id == "done"){
-      Item.count['done'] += 1;
       element.classList.add("doneItem");
       if (element.classList.contains("inProgress")){
-        Item.count['in-progress'] -= 1;
         element.classList.remove("inProgress");
       }
     }
     else if(item.id == "in-progress"){
-      Item.count['in-progress'] += 1;
       element.classList.add("inProgress");
       if (element.classList.contains("doneItem")){
-        Item.count['done'] -= 1;
         element.classList.remove("doneItem");
       }
     }
     else if(item != "done" && element.classList.contains("doneItem")){
-      Item.count['done'] -= 1;
       element.classList.remove("doneItem");
     }
     else if(item != "in-progress" && element.classList.contains("inProgress")){
-      Item.count['in-progress'] -= 1;
       element.classList.remove("inProgress");
     }
-    console.log(Item.count);
-    const availableColumns = ["requested", "in-progress", "done"];
 
     if(availableColumns.includes(event.target.id)){
       element.current_column = event.target.id;
@@ -76,11 +91,21 @@ document.querySelectorAll('.drop').forEach(item => {
       error.innerHTML = messageItemOnItem;
     }
 
-})
+    availableColumns.forEach(cols => {
+      document.getElementById(cols+"-bar").style.width = String((Item.count[cols] / allItems.length) * 100)+'%';
+      console.log((Item.count[cols] / allItems.length) * 100);
+    })
+
+});
+
+
+
+
   item.addEventListener('dragover', (event) => {
 
     event.preventDefault();
   })
+
 
 }
 

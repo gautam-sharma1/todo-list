@@ -1,12 +1,9 @@
 class Item {
 
     static order = 0;
-    tagMap= {'1': 'Arrays', '2':'Dynamic Programming', '3':'Trees', '4':'Recursion'};
+    tagMap = {'1': 'Arrays', '2':'Dynamic Programming', '3':'Trees', '4':'Recursion'};
     static availableColumns = ["requested", "in-progress", "done"];
     static count = {"requested":0, "in-progress":0,"done":0};
-    static setCount(oldValue, newValue){
-
-    }
 
     constructor(id, name, url, tags, errorHandle,domElement) {
         this.id = id;
@@ -29,6 +26,7 @@ class Item {
     addDragStart() {
         this.domElement.addEventListener('dragstart', (event) => {
             event.dataTransfer.setData('text', event.target.id);
+            event.dataTransfer.setData('parent', event.path[1].id);
         });
     };
 
