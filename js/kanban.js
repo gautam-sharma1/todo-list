@@ -6,7 +6,12 @@ const error = document.querySelector('.error');
 const message = 'Please add a description.';
 const availableColumns = ["requested", "in-progress", "done"];
 const messageItemOnItem = 'Cannot drop one item onto another';
+
+
 const allItems = [];
+
+
+
 
 const add_btn = document.querySelector('.add');
 add_btn.addEventListener('click', () => {
@@ -16,7 +21,7 @@ add_btn.addEventListener('click', () => {
      target.appendChild(item);
 });
 
-const email_btn = new Button('email','Send Email!');
+
 
 const create_item = () => {
   
