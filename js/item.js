@@ -26,7 +26,7 @@ class Item {
     addDragStart() {
         this.domElement.addEventListener('dragstart', (event) => {
             event.dataTransfer.setData('text', event.target.id);
-            event.dataTransfer.setData('parent', event.path[1].id);
+            event.dataTransfer.setData('parent', event.composedPath()[1].id);
         });
     };
 

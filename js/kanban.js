@@ -10,9 +10,6 @@ const messageItemOnItem = 'Cannot drop one item onto another';
 
 const allItems = [];
 
-
-
-
 const add_btn = document.querySelector('.add');
 add_btn.addEventListener('click', () => {
   const target = document.querySelector('#requested');
@@ -97,8 +94,8 @@ document.querySelectorAll('.drop').forEach(item => {
     }
 
     availableColumns.forEach(cols => {
-      document.getElementById(cols+"-bar").style.width = String((Item.count[cols] / allItems.length) * 100)+'%';
-      console.log((Item.count[cols] / allItems.length) * 100);
+      document.getElementById(cols+"-bar").style.width = String( (Item.count[cols] / allItems.length) * 100)+"%";
+      console.log( (Item.count[cols] / allItems.length) * 100);
     })
 
 });
