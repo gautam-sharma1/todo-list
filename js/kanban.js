@@ -49,6 +49,7 @@ document.querySelectorAll('.drop').forEach(item => {
     // TODO error handler
     const srcID = event.dataTransfer.getData('parent');
     const targetID = event.target.id;
+    
 
     if(availableColumns.includes(event.target.id)){
       if(srcID !== event.target.id){
@@ -95,7 +96,6 @@ document.querySelectorAll('.drop').forEach(item => {
 
     availableColumns.forEach(cols => {
       document.getElementById(cols+"-bar").style.width = String( (Item.count[cols] / allItems.length) * 100)+"%";
-      console.log( (Item.count[cols] / allItems.length) * 100);
     })
 
 });

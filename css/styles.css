@@ -117,3 +117,15 @@ text-align: center;
 margin-bottom: 10rem;
   
 }
+
+#requested{
+  padding-bottom: 5cm;
+}
+
+#done{
+  padding-bottom: 5cm;
+}
+
+#in-progress{
+  padding-bottom: 5cm;
+}
