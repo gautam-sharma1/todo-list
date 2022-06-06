@@ -1,3 +1,5 @@
+import {Code} from './code.js'
+
 class Item {
 
     static order = 0;
@@ -15,14 +17,27 @@ class Item {
         this.tag_id = 1;
         this.solution = " ";
         this.initialize(errorHandle);
-        this.current_column = 0;
-        //this.addColumnCallBack();
+        this.code_element = null;
         this.addEmptyDiv();
         this.addDropDown();
         this.addEmptyDiv();
         this.addUrlButton();
         this.addNotes();
+        this.addDropDownCallback();
+        this.addUrlButtonCallback();
+        this.addDropDownCallback();
+        this.addNotesCallback();
+
     }
+
+    
+    addCallbacks(){
+        this.addDropDownCallback();
+        this.addUrlButtonCallback();
+        this.addDropDownCallback();
+        this.addNotesCallback();
+    }
+
 
     addDragStart() {
         this.domElement.addEventListener('dragstart', (event) => {
@@ -33,25 +48,29 @@ class Item {
 
 
     addNotes() {
-        var tempDiv = document.createElement('div');
-        this.domElement.appendChild(tempDiv);
-        tempDiv.innerHTML =
+        this.notesNode = document.createElement('div');
+        this.domElement.appendChild(this.notesNode);
+        this.notesNode.innerHTML =
             '<div class="mb-3">' +
             '<label for="exampleFormControlTextarea" class="form-label">Notes</label>' +
             '<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>' +
             '</div>';
-
-        tempDiv.lastChild.addEventListener('change', (event) => {
+        this.addNotesCallback();
+    }
+    
+    addNotesCallback(){
+        this.notesNode.lastChild.addEventListener('change', (event) => {
             event.preventDefault();
             this.notes = event.target.value;
         })
     }
 
-    addDropDown() {
-        var tempDiv = document.createElement('div');
-        this.domElement.appendChild(tempDiv);
 
-        tempDiv.innerHTML =
+    addDropDown() {
+        this.dropDown = document.createElement('div');
+        this.domElement.appendChild(this.dropDown);
+
+        this.dropDown.innerHTML =
             '<span><label for="basic-url" class="form-label">Problem Type</label>' +
             '<select class="form-select" id="inputGroupSelect01">' +
             '<option value="1">Arrays</option>' +
@@ -62,11 +81,14 @@ class Item {
             '<option value="6">HashMap</option>' +
             '<option value="7">Graph</option>' +
             '</select></span>'
+    }
 
-        tempDiv.lastChild.addEventListener('change', (event) => {
+    addDropDownCallback(){
+            this.dropDown.lastChild.addEventListener('change', (event) => {
             event.preventDefault();
             // sets the tag_id
             this.tag_id = event.target.value;
+            localStorage.dom = document.body.innerHTML;
         })
     }
 
@@ -79,6 +101,7 @@ class Item {
     addDragEnd() {
         this.domElement.addEventListener('dragend', (event) => {
             event.dataTransfer.clearData();
+            localStorage.dom = document.body.innerHTML;
         });
     }
 
@@ -103,72 +126,69 @@ class Item {
     }
 
     addUrlButton() {
-        var tempDiv = document.createElement('div');
-        this.domElement.appendChild(tempDiv);
+        this.urlButton = document.createElement('div');
+        this.domElement.appendChild(this.urlButton );
 
-        tempDiv.innerHTML =
+        this.urlButton .innerHTML =
             '<label for="basic-url" class="form-label">Problem URL</label>' +
             '<div class="input-group mb-3">' +
             '<input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">' +
             '</div>'
 
-        tempDiv.addEventListener('change', (event) => {
+    }
+
+    addUrlButtonCallback(){
+        this.urlButton .addEventListener('change', (event) => {
             this.url = event.target.value
+            localStorage.dom = document.body.innerHTML;
         })
+
     }
 
     addSolutionButton(solution = this.solution) {
-        var tempDiv1 = document.createElement('div');
-        this.domElement.appendChild(tempDiv1);
+        var solutionButton = document.createElement('div');
+        this.domElement.appendChild(solutionButton);
 
-        tempDiv1.innerHTML =
+        solutionButton.innerHTML =
             '<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target='+
-            '#solutionNumber'+Item.order + " "+
+            '#solutionNumber'+ this.id + " "+
              'aria-expanded="false" aria-controls="collapseExample">' +
             'Toggle Solution' +
             '</button>' +
             '<br>' + '<br>'
-
-        var tempDiv2 = document.createElement('div');
-        this.domElement.appendChild(tempDiv2);
-
-        tempDiv2.classList.add('collapse')
-        tempDiv2.setAttribute('id', 'solutionNumber'+ String(Item.order));
         
-        tempDiv2.innerHTML =
+        // Area to display solution
+        var solutionDisplay = document.createElement('div');
+        this.domElement.appendChild(solutionDisplay);
+
+        solutionDisplay.classList.add('collapse')
+        solutionDisplay.setAttribute('id', 'solutionNumber'+ String(this.id));
+        
+        solutionDisplay.innerHTML =
             '<div class="card card-body">' +
             + solution +
             '</div>' 
 
-
         
-        var tempDiv3 = document.createElement('div');
-        tempDiv2.appendChild(tempDiv3);
-        tempDiv3.innerHTML =
+        // Area to edit solution
+        var solutionEdit = document.createElement('div');
+        solutionDisplay.appendChild(solutionEdit);
+        solutionEdit.innerHTML =
             '<div class="mb-3">' +
             '<label for="exampleFormControlTextarea" class="form-label"></label>' +
-            '<textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>' +
+            '<textarea class="form-control" id='+ "textarea"+String(this.id)+" "+ 
+            'rows="3"></textarea>' +
             '</div>';
-
-        tempDiv3.lastChild.addEventListener('change', (event) => {
+            
+            solutionEdit.lastChild.addEventListener('change', (event) => {
             event.preventDefault();
             this.solution = event.target.value;
-            //tempDiv2.lastChild.innerHTML = this.solution;
-            tempDiv2.children.item(0).innerHTML = this.solution;
-            
-            
+            this.code_element = new Code(solutionDisplay.firstChild,this.solution);
+            localStorage.dom = document.body.innerHTML;
+                        
         })
 
-       
-
-
-
-
-        // tempDiv2.lastChild.addEventListener('change', (event) => {
-        //     event.preventDefault();
-        //     this.solution = event.target.value;
-        // })
-
+    
     }
 
 
@@ -179,20 +199,6 @@ class Item {
         this.domElement.appendChild(aTag);
     }
 
-    // addItemCollapseUsingSaveButton(){
-    //     var tempDiv1 = document.createElement('div');
-
-    //     tempDiv1.innerHTML =
-    //         '<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample1">' +
-    //         'Save' +
-    //         '</button>' 
-        
-    //     // this.domElement.classList.add('collapse')
-    //     // this.domElement.setAttribute('id', 'collapseExample1');
-    //     this.domElement.appendChild(tempDiv1);
-    //     return tempDiv1.firstChild;
-    
-    // }
 
     initialize(error) {
         

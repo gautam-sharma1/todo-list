@@ -1,11 +1,29 @@
 import {Item} from './item.js'
-import {Button} from './button.js'
 import {Tags} from './tags.js'
 
+
 const error = document.querySelector('.error');
-const message = 'Please add a description.';
 const availableColumns = ["requested", "in-progress", "done"];
 const messageItemOnItem = 'Cannot drop one item onto another';
+
+// let numRefreshes = parseInt(localStorage.numRefreshes);
+// numRefreshes =  Object.is(numRefreshes,NaN) ? 0 : numRefreshes;
+// localStorage.numRefreshes = -1;
+// localStorage.numRefreshes = ++numRefreshes;
+// //numRefreshes = 0;
+// if(numRefreshes >= 1){
+//   document.body.innerHTML = localStorage.dom;
+//   Item.count = JSON.parse(localStorage.itemCount);
+//   addDropCallbacks();
+//   var allItemsCopy = JSON.parse(localStorage.allItems);
+//   for(let i=0; i< allItemsCopy.length; i++){
+//     let item = document.querySelector("#item-"+allItemsCopy[i].id);
+//     item.draggable = "true";
+//     const itemObj = new Item(allItemsCopy[i].id,"hello","",allItemsCopy[i].tag, error, item,false,allItemsCopy);
+//     itemObj.addDragStart();
+//     itemObj.addDragEnd();
+//   }
+// }
 
 
 const allItems = [];
@@ -13,9 +31,12 @@ const allItems = [];
 const add_btn = document.querySelector('.add');
 add_btn.addEventListener('click', () => {
   const target = document.querySelector('#requested');
-     const item = create_item();
-     allItems.push(item);
+     const {item, itemObj} = create_item();
+     allItems.push(itemObj);
      target.appendChild(item);
+     localStorage.dom = document.body.innerHTML;
+     localStorage.allItems = JSON.stringify(allItems);
+     
 });
 
 
@@ -27,17 +48,18 @@ const create_item = () => {
   item.id = "item-" + String(Item.order);
   item.draggable = "true";
   const tag = new Tags('Initialize');
-  const itemObj = new Item(1,"hello","",tag, error,item);
+  const itemObj = new Item(Item.order,"hello","",tag, error,item);
   Item.count['requested'] += 1;
   itemObj.addDragStart();
   itemObj.addDragEnd();
   
-  return item;
+  return {item, itemObj};
 };
 
 
+addDropCallbacks();
 
-
+function addDropCallbacks(){
 // TODO add to a module
 document.querySelectorAll('.drop').forEach(item => {
     item.addEventListener('drop', (event) => {
@@ -48,8 +70,6 @@ document.querySelectorAll('.drop').forEach(item => {
 
     // TODO error handler
     const srcID = event.dataTransfer.getData('parent');
-    const targetID = event.target.id;
-    
 
     if(availableColumns.includes(event.target.id)){
       if(srcID !== event.target.id){
@@ -95,8 +115,12 @@ document.querySelectorAll('.drop').forEach(item => {
     }
 
     availableColumns.forEach(cols => {
-      document.getElementById(cols+"-bar").style.width = String( (Item.count[cols] / allItems.length) * 100)+"%";
+      document.getElementById(cols+"-bar").style.width = String((Item.count[cols] / allItems.length) * 100)+"%";
     })
+
+    localStorage.dom = document.body.innerHTML;
+    localStorage.itemCount = JSON.stringify(Item.count);
+    localStorage.allItems = JSON.stringify(allItems);
 
 });
 
@@ -111,6 +135,5 @@ document.querySelectorAll('.drop').forEach(item => {
 
 }
 
-
-);
+)};
   
