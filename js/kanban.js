@@ -6,26 +6,6 @@ const error = document.querySelector('.error');
 const availableColumns = ["requested", "in-progress", "done"];
 const messageItemOnItem = 'Cannot drop one item onto another';
 
-// let numRefreshes = parseInt(localStorage.numRefreshes);
-// numRefreshes =  Object.is(numRefreshes,NaN) ? 0 : numRefreshes;
-// localStorage.numRefreshes = -1;
-// localStorage.numRefreshes = ++numRefreshes;
-// //numRefreshes = 0;
-// if(numRefreshes >= 1){
-//   document.body.innerHTML = localStorage.dom;
-//   Item.count = JSON.parse(localStorage.itemCount);
-//   addDropCallbacks();
-//   var allItemsCopy = JSON.parse(localStorage.allItems);
-//   for(let i=0; i< allItemsCopy.length; i++){
-//     let item = document.querySelector("#item-"+allItemsCopy[i].id);
-//     item.draggable = "true";
-//     const itemObj = new Item(allItemsCopy[i].id,"hello","",allItemsCopy[i].tag, error, item,false,allItemsCopy);
-//     itemObj.addDragStart();
-//     itemObj.addDragEnd();
-//   }
-// }
-
-
 const allItems = [];
 
 const add_btn = document.querySelector('.add');

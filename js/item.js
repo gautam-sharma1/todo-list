@@ -201,10 +201,12 @@ class Item {
 
 
     initialize(error) {
-        
+        const problem_name = document.createElement("label");
+        problem_name.innerHTML = "Problem Name";
+        this.domElement.appendChild(problem_name);
         const input = document.createElement("input");
         this.domElement.appendChild(input);
-        //const save_btn = this.addItemCollapseUsingSaveButton();
+        this.addLineBreak();
         const save_btn = document.createElement("button");
         save_btn.innerHTML = "Save";
         this.domElement.appendChild(save_btn);
